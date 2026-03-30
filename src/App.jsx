@@ -54,8 +54,8 @@ const FadeIn = ({ children, style }) => {
 
 const AnnouncementBar = () => (
   <div style={{ background: colors.dark, color: colors.white, textAlign: "center", padding: "10px 20px", fontSize: 13, fontWeight: 500 }}>
-    <span style={{ color: colors.amber, marginRight: 8 }}>●</span>
-    Now accepting early sign-ups in Abuja — and nationwide interest registrations across Nigeria.
+    <span style={{ color: colors.amber, marginRight: 8 }}>â¿</span>
+    Now accepting early sign-ups in Abuja â and nationwide interest registrations across Nigeria.
   </div>
 );
 
@@ -66,7 +66,7 @@ const Nav = ({ mobile, scrolled }) => {
       <span style={{ fontSize: 22, fontWeight: 700, color: colors.text, fontFamily: "'Fraunces', 'Playfair Display', serif" }}>Fix Plug</span>
       {mobile ? (
         <>
-          <span onClick={() => setOpen(!open)} style={{ fontSize: 24, cursor: "pointer", color: colors.text }}>{open ? "✕" : "☰"}</span>
+          <span onClick={() => setOpen(!open)} style={{ fontSize: 24, cursor: "pointer", color: colors.text }}>{open ? "â" : "â°"}</span>
           {open && (
             <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: colors.bg, padding: "24px 20px", boxShadow: "0 8px 24px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", gap: 16 }}>
               {["How It Works", "Services", "For Providers"].map(l => <a key={l} style={{ color: colors.text, textDecoration: "none", fontSize: 15, fontWeight: 500 }}>{l}</a>)}
@@ -92,19 +92,29 @@ const Nav = ({ mobile, scrolled }) => {
 
 const Hero = ({ mobile }) => (
   <section style={{ background: colors.bg, minHeight: mobile ? "auto" : "90vh", display: "flex", alignItems: "center", padding: mobile ? "60px 20px" : "80px 60px" }}>
-    <div style={{ maxWidth: 640 }}>
-      <FadeIn>
-        <h1 style={{ fontFamily: "'Fraunces', 'Playfair Display', serif", fontSize: mobile ? 38 : 56, fontWeight: 700, lineHeight: 1.1, color: colors.text, margin: 0 }}>
-          Skilled Services You Can Actually Trust.
-        </h1>
-        <p style={{ fontSize: mobile ? 16 : 18, color: colors.textSecondary, lineHeight: 1.7, marginTop: 20, maxWidth: 520 }}>
-          Fix Plug connects Nigerian homes and businesses to verified, professional service providers — starting in Abuja, built for the whole country.
-        </p>
-        <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap" }}>
-          <Btn variant="amber" large>Book a Service</Btn>
-          <Btn variant="dark" outline large style={{ borderColor: colors.dark, color: colors.dark }}>Join as a Provider</Btn>
+    <div style={{ display: "flex", alignItems: "center", gap: mobile ? 32 : 60, flexDirection: mobile ? "column" : "row", maxWidth: 1200, margin: "0 auto", width: "100%" }}>
+      <div style={{ flex: 1, maxWidth: 600 }}>
+        <FadeIn>
+          <h1 style={{ fontFamily: "'Fraunces', 'Playfair Display', serif", fontSize: mobile ? 38 : 56, fontWeight: 700, lineHeight: 1.1, color: colors.text, margin: 0 }}>
+            Skilled Services You Can Actually Trust.
+          </h1>
+          <p style={{ fontSize: mobile ? 16 : 18, color: colors.textSecondary, lineHeight: 1.7, marginTop: 20, maxWidth: 520 }}>
+            Fix Plug connects Nigerian homes and businesses to verified, professional service providers â starting in Abuja, built for the whole country.
+          </p>
+          <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap" }}>
+            <Btn variant="amber" large>Book a Service</Btn>
+            <Btn variant="dark" outline large style={{ borderColor: colors.dark, color: colors.dark }}>Join as a Provider</Btn>
+          </div>
+          <p style={{ fontSize: 13, color: colors.textSecondary, marginTop: 14 }}>No commitment required. Sign up to get early access or register your interest.</p>
+        </FadeIn>
+      </div>
+      <FadeIn style={{ flex: 1, display: mobile ? "none" : "block" }}>
+        <div style={{ position: "relative" }}>
+          <img src="https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Professional plumber installing pipes" style={{ width: "100%", borderRadius: 16, objectFit: "cover", height: 520, boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }} />
+          <div style={{ position: "absolute", bottom: -16, left: -16, background: colors.amber, color: colors.white, padding: "14px 20px", borderRadius: 10, fontSize: 13, fontWeight: 600, boxShadow: "0 4px 16px rgba(200,133,58,0.3)" }}>
+            <span style={{ fontSize: 20, marginRight: 8 }}>â</span>Verified & Professional
+          </div>
         </div>
-        <p style={{ fontSize: 13, color: colors.textSecondary, marginTop: 14 }}>No commitment required. Sign up to get early access or register your interest.</p>
       </FadeIn>
     </div>
   </section>
@@ -114,7 +124,7 @@ const TrustStrip = ({ mobile }) => {
   const items = ["Verified Providers Only", "Transparent Pricing", "Professional Standards", "Rated After Every Job", "Real Accountability"];
   return (
     <div style={{ background: colors.tierHighlight, padding: "18px 20px", display: "flex", justifyContent: "center", gap: mobile ? 20 : 40, flexWrap: "wrap" }}>
-      {items.map(i => <span key={i} style={{ fontSize: 13, fontWeight: 500, color: colors.text, whiteSpace: "nowrap" }}><span style={{ color: colors.amber, marginRight: 6 }}>✦</span>{i}</span>)}
+      {items.map(i => <span key={i} style={{ fontSize: 13, fontWeight: 500, color: colors.text, whiteSpace: "nowrap" }}><span style={{ color: colors.amber, marginRight: 6 }}>â¦</span>{i}</span>)}
     </div>
   );
 };
@@ -122,12 +132,19 @@ const TrustStrip = ({ mobile }) => {
 const ProblemSection = ({ mobile }) => (
   <section style={{ background: colors.bg, padding: mobile ? "60px 20px" : "100px 60px" }}>
     <FadeIn>
-      <div style={{ maxWidth: 640, margin: "0 auto" }}>
-        <Label>Why Fix Plug Exists</Label>
-        <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, lineHeight: 1.2, margin: "0 0 20px" }}>Finding a Skilled Worker Should Not Feel Like a Risk.</h2>
-        <p style={{ fontSize: 16, color: colors.textSecondary, lineHeight: 1.7 }}>Most Nigerians have been there. You need an electrician. A plumber. Someone for your AC. You ask around, get a number from a neighbour, and hope for the best.</p>
-        <p style={{ fontSize: 16, color: colors.textSecondary, lineHeight: 1.7, marginTop: 16 }}>Unverified workers. Unclear pricing. Jobs left incomplete. No one to call when something goes wrong.</p>
-        <p style={{ fontSize: 16, color: colors.text, lineHeight: 1.7, marginTop: 16, fontWeight: 500 }}>Fix Plug was built to change that — not by adding another listing, but by building a platform where trust is the product.</p>
+      <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", gap: mobile ? 32 : 60, flexDirection: mobile ? "column" : "row", alignItems: "center" }}>
+        <div style={{ flex: 1 }}>
+          <Label>Why Fix Plug Exists</Label>
+          <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, lineHeight: 1.2, margin: "0 0 20px" }}>Finding a Skilled Worker Should Not Feel Like a Risk.</h2>
+          <p style={{ fontSize: 16, color: colors.textSecondary, lineHeight: 1.7 }}>Most Nigerians have been there. You need an electrician. A plumber. Someone for your AC. You ask around, get a number from a neighbour, and hope for the best.</p>
+          <p style={{ fontSize: 16, color: colors.textSecondary, lineHeight: 1.7, marginTop: 16 }}>Unverified workers. Unclear pricing. Jobs left incomplete. No one to call when something goes wrong.</p>
+          <p style={{ fontSize: 16, color: colors.text, lineHeight: 1.7, marginTop: 16, fontWeight: 500 }}>Fix Plug was built to change that â not by adding another listing, but by building a platform where trust is the product.</p>
+        </div>
+        {!mobile && (
+          <div style={{ flex: 1 }}>
+            <img src="https://images.pexels.com/photos/7484798/pexels-photo-7484798.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional tools in workshop" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 380, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
+          </div>
+        )}
       </div>
     </FadeIn>
   </section>
@@ -162,10 +179,10 @@ const HowItWorks = ({ mobile }) => {
 
 const ServiceCategories = ({ mobile }) => {
   const cats = [
-    { icon: "⚡", name: "Electrical", desc: "Installations, fault diagnosis, wiring, safety checks, and more." },
-    { icon: "🔧", name: "Plumbing", desc: "Leaks, pipe installations, drainage repairs, water system work." },
-    { icon: "❄️", name: "AC Repair & Installation", desc: "Servicing, fault-finding, new installations, and routine maintenance." },
-    { icon: "⚙️", name: "Generator & Inverter Support", desc: "Repairs, maintenance, installation, and diagnostic support." },
+    { icon: "â¡", name: "Electrical", desc: "Installations, fault diagnosis, wiring, safety checks, and more.", img: "https://images.pexels.com/photos/9679179/pexels-photo-9679179.jpeg?auto=compress&cs=tinysrgb&w=400" },
+    { icon: "ð§", name: "Plumbing", desc: "Leaks, pipe installations, drainage repairs, water system work.", img: "https://images.unsplash.com/photo-1676210133055-eab6ef033ce3?w=400&q=80&fit=crop" },
+    { icon: "âï¸", name: "AC Repair & Installation", desc: "Servicing, fault-finding, new installations, and routine maintenance.", img: "https://images.unsplash.com/photo-1550998251-1e18917c975c?w=400&q=80&fit=crop" },
+    { icon: "âï¸", name: "Generator & Inverter Support", desc: "Repairs, maintenance, installation, and diagnostic support.", img: "https://images.pexels.com/photos/175039/pexels-photo-175039.jpeg?auto=compress&cs=tinysrgb&w=400" },
   ];
   return (
     <section style={{ background: colors.bg, padding: mobile ? "60px 20px" : "100px 60px" }}>
@@ -173,19 +190,22 @@ const ServiceCategories = ({ mobile }) => {
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <Label>What We Cover</Label>
           <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, margin: "0 0 12px" }}>Professional Help Across the Services That Matter Most.</h2>
-          <p style={{ fontSize: 15, color: colors.textSecondary, marginBottom: 36 }}>Fix Plug launches with four high-demand categories — with more on the way.</p>
+          <p style={{ fontSize: 15, color: colors.textSecondary, marginBottom: 36 }}>Fix Plug launches with four high-demand categories â with more on the way.</p>
           <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1fr", gap: 16 }}>
             {cats.map(c => (
-              <div key={c.name} style={{ background: colors.tierHighlight, borderRadius: 10, padding: 28, transition: "all 0.2s ease", cursor: "pointer", borderLeft: `3px solid transparent` }}
+              <div key={c.name} style={{ background: colors.tierHighlight, borderRadius: 10, overflow: "hidden", transition: "all 0.2s ease", cursor: "pointer", borderLeft: `3px solid transparent` }}
                 onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.06)"; e.currentTarget.style.borderLeftColor = colors.amber; }}
                 onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderLeftColor = "transparent"; }}>
-                <span style={{ fontSize: 28 }}>{c.icon}</span>
-                <h3 style={{ fontSize: 17, fontWeight: 600, color: colors.text, margin: "10px 0 6px" }}>{c.name}</h3>
-                <p style={{ fontSize: 14, color: colors.textSecondary, lineHeight: 1.6, margin: 0 }}>{c.desc}</p>
+                <img src={c.img} alt={c.name} style={{ width: "100%", height: 160, objectFit: "cover" }} />
+                <div style={{ padding: "20px 24px 24px" }}>
+                  <span style={{ fontSize: 24 }}>{c.icon}</span>
+                  <h3 style={{ fontSize: 17, fontWeight: 600, color: colors.text, margin: "8px 0 6px" }}>{c.name}</h3>
+                  <p style={{ fontSize: 14, color: colors.textSecondary, lineHeight: 1.6, margin: 0 }}>{c.desc}</p>
+                </div>
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 14, color: colors.textSecondary, marginTop: 24 }}>More categories are in development. <span style={{ color: colors.amber, fontWeight: 500, cursor: "pointer" }}>Register your interest →</span></p>
+          <p style={{ fontSize: 14, color: colors.textSecondary, marginTop: 24 }}>More categories are in development. <span style={{ color: colors.amber, fontWeight: 500, cursor: "pointer" }}>Register your interest â</span></p>
         </div>
       </FadeIn>
     </section>
@@ -213,12 +233,12 @@ const TierSection = ({ mobile }) => {
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, marginBottom: 20 }}>{t.desc}</p>
                 {t.features.map(f => (
                   <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                    <span style={{ color: colors.amber, fontSize: 10 }}>●</span>
+                    <span style={{ color: colors.amber, fontSize: 10 }}>â</span>
                     <span style={{ fontSize: 13, color: "rgba(255,255,255,0.75)" }}>{f}</span>
                   </div>
                 ))}
                 <div style={{ marginTop: 24 }}>
-                  <Btn variant="amber">Book {t.name} →</Btn>
+                  <Btn variant="amber">Book {t.name} â</Btn>
                 </div>
               </div>
             ))}
@@ -233,18 +253,25 @@ const TierSection = ({ mobile }) => {
 const CustomerSection = ({ mobile }) => (
   <section style={{ background: colors.bg, padding: mobile ? "60px 20px" : "100px 60px" }}>
     <FadeIn>
-      <div style={{ maxWidth: 640, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", gap: mobile ? 32 : 60, flexDirection: mobile ? "column" : "row", alignItems: "center" }}>
+      <div style={{ flex: 1 }}>
         <Label>For Customers</Label>
         <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.text, margin: "0 0 16px", lineHeight: 1.2 }}>Finally. A Service Platform Built Around Your Peace of Mind.</h2>
         <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 24 }}>You should not have to chase a worker to finish a job. You should not have to guess what something will cost. Fix Plug gives you verified providers, confirmed pricing, and a clear path to resolution if anything goes wrong.</p>
         {["Access to screened, approved professionals", "Pricing confirmed before work begins", "A provider who knows what is expected", "A rating system that holds everyone accountable", "Support if something does not go as planned"].map(f => (
           <div key={f} style={{ display: "flex", gap: 10, marginBottom: 10, alignItems: "center" }}>
-            <span style={{ color: colors.amber, fontSize: 8 }}>●</span>
+            <span style={{ color: colors.amber, fontSize: 8 }}>â</span>
             <span style={{ fontSize: 14, color: colors.text }}>{f}</span>
           </div>
         ))}
         <div style={{ marginTop: 28 }}><Btn variant="dark" large>Sign Up for Early Access</Btn></div>
         <p style={{ fontSize: 13, color: colors.textSecondary, marginTop: 12 }}>Currently launching in Abuja. Register from anywhere in Nigeria.</p>
+      </div>
+      {!mobile && (
+        <div style={{ flex: 1 }}>
+          <img src="https://images.pexels.com/photos/7578967/pexels-photo-7578967.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Happy homeowners" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 440, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
+        </div>
+      )}
       </div>
     </FadeIn>
   </section>
@@ -253,26 +280,33 @@ const CustomerSection = ({ mobile }) => (
 const ProviderSection = ({ mobile }) => (
   <section style={{ background: colors.forest, padding: mobile ? "60px 20px" : "100px 60px" }}>
     <FadeIn>
-      <div style={{ maxWidth: 640, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", gap: mobile ? 32 : 60, flexDirection: mobile ? "column" : "row-reverse", alignItems: "center" }}>
+      <div style={{ flex: 1 }}>
         <Label light>For Providers</Label>
         <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.white, margin: "0 0 16px", lineHeight: 1.2 }}>A Better Way to Work. A Better Class of Customer.</h2>
-        <p style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.7, marginBottom: 24 }}>If you are skilled, professional, and tired of relying only on word of mouth — Fix Plug is built for you. Join early, meet our standards, and access a pipeline of customers who value quality work.</p>
+        <p style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.7, marginBottom: 24 }}>If you are skilled, professional, and tired of relying only on word of mouth â Fix Plug is built for you. Join early, meet our standards, and access a pipeline of customers who value quality work.</p>
         <p style={{ fontSize: 13, color: colors.amber, fontWeight: 600, marginBottom: 12, letterSpacing: "0.04em" }}>WHAT YOU GET</p>
         {["Visibility to customers who value professional service", "Clear job briefs before you arrive", "Transparent earnings with no hidden surprises", "A growing reputation on a platform that means something", "A path to Premier tier for top performers"].map(f => (
           <div key={f} style={{ display: "flex", gap: 10, marginBottom: 10, alignItems: "center" }}>
-            <span style={{ color: colors.amber, fontSize: 8 }}>●</span>
+            <span style={{ color: colors.amber, fontSize: 8 }}>â</span>
             <span style={{ fontSize: 14, color: "rgba(255,255,255,0.8)" }}>{f}</span>
           </div>
         ))}
         <p style={{ fontSize: 13, color: colors.amber, fontWeight: 600, margin: "24px 0 12px", letterSpacing: "0.04em" }}>WHAT WE ASK OF YOU</p>
         {["Pass our verification intake", "Commit to our conduct and quality standards", "Show up professionally and complete jobs as agreed", "Communicate clearly with customers throughout"].map(f => (
           <div key={f} style={{ display: "flex", gap: 10, marginBottom: 10, alignItems: "center" }}>
-            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 8 }}>●</span>
+            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 8 }}>â</span>
             <span style={{ fontSize: 14, color: "rgba(255,255,255,0.65)" }}>{f}</span>
           </div>
         ))}
         <div style={{ marginTop: 28 }}><Btn variant="amber" large>Apply to Join the Network</Btn></div>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 12 }}>Currently recruiting providers in Abuja. Applications from other cities welcome — expansion is coming.</p>
+        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 12 }}>Currently recruiting providers in Abuja. Applications from other cities welcome â expansion is coming.</p>
+      </div>
+      {!mobile && (
+        <div style={{ flex: 1 }}>
+          <img src="https://images.unsplash.com/photo-1635842183772-52b2862a162b?w=600&q=80&fit=crop" alt="Professional service provider" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 480, boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }} />
+        </div>
+      )}
       </div>
     </FadeIn>
   </section>
@@ -283,20 +317,24 @@ const AbujaSection = ({ mobile }) => {
     { name: "Abuja", active: true }, { name: "Lagos", active: false }, { name: "Port Harcourt", active: false }, { name: "Enugu", active: false }, { name: "Kano", active: false },
   ];
   return (
-    <section style={{ background: colors.bg, padding: mobile ? "60px 20px" : "100px 60px", textAlign: "center" }}>
+    <section style={{ position: "relative", padding: mobile ? "60px 20px" : "100px 60px", textAlign: "center", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        <img src="https://images.pexels.com/photos/31187374/pexels-photo-31187374.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Aerial view of Abuja" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(249,247,244,0.92), rgba(249,247,244,0.96))" }} />
+      </div>
       <FadeIn>
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <Label>Where We Are Building</Label>
           <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, margin: "0 0 16px" }}>Starting in Abuja. Open to Nigeria.</h2>
-          <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 32 }}>Fix Plug is launching operations in Abuja — where demand for trusted skilled services is high and the gap in quality is clear. We expand based on demand. Your registration tells us where to build next.</p>
+          <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 32 }}>Fix Plug is launching operations in Abuja â where demand for trusted skilled services is high and the gap in quality is clear. We expand based on demand. Your registration tells us where to build next.</p>
           <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 32 }}>
             {cities.map(c => (
               <span key={c.name} style={{ padding: "8px 18px", borderRadius: 20, fontSize: 13, fontWeight: 500, background: c.active ? colors.amber : colors.tierHighlight, color: c.active ? colors.white : colors.textSecondary, border: c.active ? "none" : `1px solid ${colors.border}` }}>
-                {c.name}{c.active ? " — Active" : ""}
+                {c.name}{c.active ? " â Active" : ""}
               </span>
             ))}
           </div>
-          <span style={{ color: colors.amber, fontWeight: 500, fontSize: 14, cursor: "pointer" }}>Register Your City's Interest →</span>
+          <span style={{ color: colors.amber, fontWeight: 500, fontSize: 14, cursor: "pointer" }}>Register Your City's Interest â</span>
         </div>
       </FadeIn>
     </section>
@@ -305,10 +343,10 @@ const AbujaSection = ({ mobile }) => {
 
 const TrustSection = ({ mobile }) => {
   const pillars = [
-    { icon: "✓", title: "Verified Before Listed", desc: "Every provider goes through a structured intake and review process. They are not listed until they meet our standards." },
-    { icon: "₦", title: "Pricing You Know Upfront", desc: "No surprises on the bill. Pricing is confirmed with you before any work begins." },
-    { icon: "★", title: "Accountability After Every Job", desc: "Every completed job is rated. Every pattern of poor performance is acted on. Your feedback shapes the network." },
-    { icon: "⛨", title: "A Platform That Stands Behind the Work", desc: "If something is not right, Fix Plug has a resolution path. You are not on your own." },
+    { icon: "â", title: "Verified Before Listed", desc: "Every provider goes through a structured intake and review process. They are not listed until they meet our standards." },
+    { icon: "â¦", title: "Pricing You Know Upfront", desc: "No surprises on the bill. Pricing is confirmed with you before any work begins." },
+    { icon: "â", title: "Accountability After Every Job", desc: "Every completed job is rated. Every pattern of poor performance is acted on. Your feedback shapes the network." },
+    { icon: "â¨", title: "A Platform That Stands Behind the Work", desc: "If something is not right, Fix Plug has a resolution path. You are not on your own." },
   ];
   return (
     <section style={{ background: colors.white, borderTop: `1px solid ${colors.border}`, padding: mobile ? "60px 20px" : "100px 60px" }}>
@@ -335,8 +373,8 @@ const ClosingCTA = ({ mobile }) => (
   <section style={{ background: colors.dark, padding: mobile ? "60px 20px" : "100px 60px", textAlign: "center" }}>
     <FadeIn>
       <div style={{ maxWidth: 640, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "'Fraunces', 'Playfair Display', serif", fontSize: mobile ? 32 : 44, fontWeight: 700, color: colors.white, margin: "0 0 16px", lineHeight: 1.15 }}>Skilled Services in Nigeria — Done Right.</h2>
-        <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", marginBottom: 36 }}>Whether you need a trusted professional or you are ready to be one — Fix Plug is where quality skilled services begin.</p>
+        <h2 style={{ fontFamily: "'Fraunces', 'Playfair Display', serif", fontSize: mobile ? 32 : 44, fontWeight: 700, color: colors.white, margin: "0 0 16px", lineHeight: 1.15 }}>Skilled Services in Nigeria â Done Right.</h2>
+        <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", marginBottom: 36 }}>Whether you need a trusted professional or you are ready to be one â Fix Plug is where quality skilled services begin.</p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           <Btn variant="amber" large>Get Early Access as a Customer</Btn>
           <Btn variant="white" outline large style={{ borderColor: "rgba(255,255,255,0.3)", color: colors.white }}>Apply to Join as a Provider</Btn>
@@ -361,7 +399,7 @@ const Footer = ({ mobile }) => (
       </div>
     </div>
     <div style={{ maxWidth: 900, margin: "24px auto 0", borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
-      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0 }}>© 2025 Fix Plug. A HorizonBond Venture. All rights reserved.</p>
+      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0 }}>Â© 2025 Fix Plug. A HorizonBond Venture. All rights reserved.</p>
       <p style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", marginTop: 8 }}>Your information is collected solely to match you with services or opportunities relevant to your sign-up. We do not share your data with third parties without your consent.</p>
     </div>
   </footer>
@@ -398,4 +436,4 @@ export default function FixPlugLanding() {
       <Footer mobile={mobile} />
     </div>
   );
-                                           }
+}
