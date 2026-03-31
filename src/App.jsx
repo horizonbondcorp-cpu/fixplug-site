@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const colors = {
   bg: "#F9F7F4",
@@ -16,7 +16,7 @@ const Label = ({ children, light }) => (
   <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: light ? "rgba(255,255,255,0.5)" : colors.textSecondary, marginBottom: 12 }}>{children}</p>
 );
 
-const Btn = ({ children, variant = "amber", outline, large, style, onClick }) => {
+const Btn = ({ children, variant = "amber", outline, large, style, onClick, ariaLabel }) => {
   const base = {
     display: "inline-block",
     padding: large ? "16px 36px" : "13px 28px",
@@ -30,7 +30,7 @@ const Btn = ({ children, variant = "amber", outline, large, style, onClick }) =>
     transition: "all 0.2s ease",
     ...style,
   };
-  return <span style={base} onClick={onClick}>{children}</span>;
+  return <span role="button" tabIndex={0} aria-label={ariaLabel} style={base} onClick={onClick} onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick && onClick(); } }}>{children}</span>;
 };
 
 const useIsMobile = () => {
@@ -67,9 +67,31 @@ const FadeIn = ({ children, style }) => {
   );
 };
 
-/* ===== FORM COMPONENTS ===== */
+// Error Boundary
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: 60, textAlign: "center", fontFamily: "'Inter', sans-serif" }}>
+          <h2 style={{ color: colors.text, fontSize: 24 }}>Something went wrong.</h2>
+          <p style={{ color: colors.textSecondary, marginTop: 12 }}>Please refresh the page to try again.</p>
+          <span role="button" tabIndex={0} style={{ display: "inline-block", marginTop: 20, padding: "12px 28px", background: colors.amber, color: colors.white, borderRadius: 6, cursor: "pointer", fontWeight: 600, border: "none" }} onClick={() => window.location.reload()}>Refresh Page</span>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
-const FormInput = ({ label, type = "text", placeholder, value, onChange, required, options, mobile }) => {
+/* ===== FORM COMPONENTS ===== */
+const FormInput = ({ label, type = "text", placeholder, value, onChange, required, options }) => {
   const inputStyle = {
     width: "100%",
     padding: "14px 16px",
@@ -90,32 +112,14 @@ const FormInput = ({ label, type = "text", placeholder, value, onChange, require
         {label}{required && <span style={{ color: colors.amber, marginLeft: 2 }}>*</span>}
       </label>
       {type === "select" ? (
-        <select
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          style={{ ...inputStyle, cursor: "pointer", appearance: "auto" }}
-        >
+        <select value={value} onChange={e => onChange(e.target.value)} style={{ ...inputStyle, cursor: "pointer", appearance: "auto" }}>
           <option value="">{placeholder || "Select..."}</option>
           {options.map(o => <option key={o} value={o}>{o}</option>)}
         </select>
       ) : type === "textarea" ? (
-        <textarea
-          placeholder={placeholder}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          rows={3}
-          style={{ ...inputStyle, resize: "vertical", minHeight: 80 }}
-        />
+        <textarea placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} rows={3} style={{ ...inputStyle, resize: "vertical", minHeight: 80 }} />
       ) : (
-        <input
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          style={inputStyle}
-          onFocus={e => e.target.style.borderColor = colors.amber}
-          onBlur={e => e.target.style.borderColor = colors.border}
-        />
+        <input type={type} placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} style={inputStyle} onFocus={e => e.target.style.borderColor = colors.amber} onBlur={e => e.target.style.borderColor = colors.border} />
       )}
     </div>
   );
@@ -130,24 +134,7 @@ const CheckboxGroup = ({ label, options, selected, onChange, required }) => (
       {options.map(o => {
         const isSelected = selected.includes(o);
         return (
-          <span
-            key={o}
-            onClick={() => {
-              if (isSelected) onChange(selected.filter(s => s !== o));
-              else onChange([...selected, o]);
-            }}
-            style={{
-              padding: "8px 16px",
-              borderRadius: 20,
-              fontSize: 13,
-              fontWeight: 500,
-              cursor: "pointer",
-              background: isSelected ? colors.amber : colors.tierHighlight,
-              color: isSelected ? colors.white : colors.text,
-              border: isSelected ? `1px solid ${colors.amber}` : `1px solid ${colors.border}`,
-              transition: "all 0.2s ease",
-            }}
-          >
+          <span key={o} role="checkbox" tabIndex={0} aria-checked={isSelected} onClick={() => { if (isSelected) onChange(selected.filter(s => s !== o)); else onChange([...selected, o]); }} onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (isSelected) onChange(selected.filter(s => s !== o)); else onChange([...selected, o]); } }} style={{ padding: "8px 16px", borderRadius: 20, fontSize: 13, fontWeight: 500, cursor: "pointer", background: isSelected ? colors.amber : colors.tierHighlight, color: isSelected ? colors.white : colors.text, border: isSelected ? `1px solid ${colors.amber}` : `1px solid ${colors.border}`, transition: "all 0.2s ease" }}>
             {o}
           </span>
         );
@@ -160,20 +147,20 @@ const CheckboxGroup = ({ label, options, selected, onChange, required }) => (
 
 const AnnouncementBar = () => (
   <div style={{ background: colors.dark, color: colors.white, textAlign: "center", padding: "10px 20px", fontSize: 13, fontWeight: 500 }}>
-    <span style={{ color: colors.amber, marginRight: 8 }}>\u25FF</span> Now accepting early sign-ups in Abuja \u2014 and nationwide interest registrations across Nigeria.
+    <span style={{ color: colors.amber, marginRight: 8 }}>{"\u25FF"}</span> Now accepting early sign-ups in Abuja — and nationwide interest registrations across Nigeria.
   </div>
 );
 
 const Nav = ({ mobile, scrolled }) => {
   const [open, setOpen] = useState(false);
   return (
-    <nav style={{ position: "sticky", top: 0, zIndex: 100, background: scrolled ? "rgba(249,247,244,0.97)" : "transparent", backdropFilter: scrolled ? "blur(10px)" : "none", boxShadow: scrolled ? "0 1px 8px rgba(0,0,0,0.06)" : "none", transition: "all 0.3s ease", padding: mobile ? "14px 20px" : "16px 60px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+    <nav style={{ position: "sticky", top: 0, zIndex: 100, background: scrolled ? "rgba(249,247,244,0.97)" : "transparent", backdropFilter: scrolled ? "blur(10px)" : "none", WebkitBackdropFilter: scrolled ? "blur(10px)" : "none", boxShadow: scrolled ? "0 1px 8px rgba(0,0,0,0.06)" : "none", transition: "all 0.3s ease", padding: mobile ? "14px 20px" : "16px 60px", display: "flex", alignItems: "center", justifyContent: "space-between" }} aria-label="Main navigation">
       <span style={{ fontSize: 22, fontWeight: 700, color: colors.text, fontFamily: "'Fraunces', 'Playfair Display', serif" }}>Fix Plug</span>
       {mobile ? (
         <>
-          <span onClick={() => setOpen(!open)} style={{ fontSize: 24, cursor: "pointer", color: colors.text }}>{open ? "\u2715" : "\u2630"}</span>
+          <span onClick={() => setOpen(!open)} role="button" tabIndex={0} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} style={{ fontSize: 24, cursor: "pointer", color: colors.text }}>{open ? "\u2715" : "\u2630"}</span>
           {open && (
-            <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: colors.bg, padding: "24px 20px", boxShadow: "0 8px 24px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: colors.bg, padding: "24px 20px", boxShadow: "0 8px 24px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", gap: 16, zIndex: 99 }}>
               {["How It Works", "Services", "For Providers"].map(l => <a key={l} style={{ color: colors.text, textDecoration: "none", fontSize: 15, fontWeight: 500, cursor: "pointer" }}>{l}</a>)}
               <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
                 <Btn variant="amber" onClick={() => { setOpen(false); scrollTo("customer-survey"); }}>Book a Service</Btn>
@@ -204,7 +191,7 @@ const Hero = ({ mobile }) => (
             Skilled Services You Can Actually Trust.
           </h1>
           <p style={{ fontSize: mobile ? 16 : 18, color: colors.textSecondary, lineHeight: 1.7, marginTop: 20, maxWidth: 520 }}>
-            Fix Plug connects Nigerian homes and businesses to verified, professional service providers \u2014 starting in Abuja, built for the whole country.
+            Fix Plug connects Nigerian homes and businesses to verified, professional service providers — starting in Abuja, built for the whole country.
           </p>
           <div style={{ display: "flex", gap: 12, marginTop: 32, flexWrap: "wrap" }}>
             <Btn variant="amber" large onClick={() => scrollTo("customer-survey")}>Book a Service</Btn>
@@ -215,9 +202,9 @@ const Hero = ({ mobile }) => (
       </div>
       <FadeIn style={{ flex: 1, display: mobile ? "none" : "block" }}>
         <div style={{ position: "relative" }}>
-          <img src="https://images.pexels.com/photos/8486932/pexels-photo-8486932.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Professional tradeswoman in safety gear" style={{ width: "100%", borderRadius: 16, objectFit: "cover", height: 520, boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }} />
+          <img src="https://images.pexels.com/photos/8486932/pexels-photo-8486932.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Professional tradeswoman in safety gear" loading="lazy" style={{ width: "100%", borderRadius: 16, objectFit: "cover", height: 520, boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }} />
           <div style={{ position: "absolute", bottom: -16, left: -16, background: colors.amber, color: colors.white, padding: "14px 20px", borderRadius: 10, fontSize: 13, fontWeight: 600, boxShadow: "0 4px 16px rgba(200,133,58,0.3)" }}>
-            <span style={{ fontSize: 20, marginRight: 8 }}>\u2713</span>Verified & Professional
+            <span style={{ fontSize: 20, marginRight: 8 }}>{"\u2713"}</span>Verified & Professional
           </div>
         </div>
       </FadeIn>
@@ -229,7 +216,7 @@ const TrustStrip = ({ mobile }) => {
   const items = ["Verified Providers Only", "Transparent Pricing", "Professional Standards", "Rated After Every Job", "Real Accountability"];
   return (
     <div style={{ background: colors.tierHighlight, padding: "18px 20px", display: "flex", justifyContent: "center", gap: mobile ? 20 : 40, flexWrap: "wrap" }}>
-      {items.map(i => <span key={i} style={{ fontSize: 13, fontWeight: 500, color: colors.text, whiteSpace: "nowrap" }}><span style={{ color: colors.amber, marginRight: 6 }}>\u2726</span>{i}</span>)}
+      {items.map(i => <span key={i} style={{ fontSize: 13, fontWeight: 500, color: colors.text, whiteSpace: "nowrap" }}><span style={{ color: colors.amber, marginRight: 6 }}>{"\u2726"}</span>{i}</span>)}
     </div>
   );
 };
@@ -243,11 +230,11 @@ const ProblemSection = ({ mobile }) => (
           <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, lineHeight: 1.2, margin: "0 0 20px" }}>Finding a Skilled Worker Should Not Feel Like a Risk.</h2>
           <p style={{ fontSize: 16, color: colors.textSecondary, lineHeight: 1.7 }}>Most Nigerians have been there. You need an electrician. A plumber. Someone for your AC. You ask around, get a number from a neighbour, and hope for the best.</p>
           <p style={{ fontSize: 16, color: colors.textSecondary, lineHeight: 1.7, marginTop: 16 }}>Unverified workers. Unclear pricing. Jobs left incomplete. No one to call when something goes wrong.</p>
-          <p style={{ fontSize: 16, color: colors.text, lineHeight: 1.7, marginTop: 16, fontWeight: 500 }}>Fix Plug was built to change that \u2014 not by adding another listing, but by building a platform where trust is the product.</p>
+          <p style={{ fontSize: 16, color: colors.text, lineHeight: 1.7, marginTop: 16, fontWeight: 500 }}>Fix Plug was built to change that — not by adding another listing, but by building a platform where trust is the product.</p>
         </div>
         {!mobile && (
           <div style={{ flex: 1 }}>
-            <img src="https://images.pexels.com/photos/7937712/pexels-photo-7937712.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional tradesman at work" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 380, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
+            <img src="https://images.pexels.com/photos/7937712/pexels-photo-7937712.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional tradesman at work" loading="lazy" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 380, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
           </div>
         )}
       </div>
@@ -262,7 +249,7 @@ const HowItWorks = ({ mobile }) => {
     { n: "03", title: "Get the Job Done Right", desc: "Your provider arrives with your job details confirmed. Pricing is agreed before work begins. You rate the experience when it is done." },
   ];
   return (
-    <section style={{ background: colors.white, borderTop: `1px solid ${colors.border}`, borderBottom: `1px solid ${colors.border}`, padding: mobile ? "60px 20px" : "100px 60px" }}>
+    <section id="how-it-works" style={{ background: colors.white, borderTop: `1px solid ${colors.border}`, borderBottom: `1px solid ${colors.border}`, padding: mobile ? "60px 20px" : "100px 60px" }}>
       <FadeIn>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <Label>How Fix Plug Works</Label>
@@ -290,18 +277,16 @@ const ServiceCategories = ({ mobile }) => {
     { icon: "\u2699\uFE0F", name: "Generator & Inverter Support", desc: "Repairs, maintenance, installation, and diagnostic support.", img: "https://images.pexels.com/photos/9242173/pexels-photo-9242173.jpeg?auto=compress&cs=tinysrgb&w=400" },
   ];
   return (
-    <section style={{ background: colors.bg, padding: mobile ? "60px 20px" : "100px 60px" }}>
+    <section id="services" style={{ background: colors.bg, padding: mobile ? "60px 20px" : "100px 60px" }}>
       <FadeIn>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <Label>What We Cover</Label>
           <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, margin: "0 0 12px" }}>Professional Help Across the Services That Matter Most.</h2>
-          <p style={{ fontSize: 15, color: colors.textSecondary, marginBottom: 36 }}>Fix Plug launches with four high-demand categories \u2014 with more on the way.</p>
+          <p style={{ fontSize: 15, color: colors.textSecondary, marginBottom: 36 }}>Fix Plug launches with four high-demand categories — with more on the way.</p>
           <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1fr", gap: 16 }}>
             {cats.map(c => (
-              <div key={c.name} style={{ background: colors.tierHighlight, borderRadius: 10, overflow: "hidden", transition: "all 0.2s ease", cursor: "pointer", borderLeft: `3px solid transparent` }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.06)"; e.currentTarget.style.borderLeftColor = colors.amber; }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderLeftColor = "transparent"; }}>
-                <img src={c.img} alt={c.name} style={{ width: "100%", height: 160, objectFit: "cover" }} />
+              <div key={c.name} style={{ background: colors.tierHighlight, borderRadius: 10, overflow: "hidden", transition: "all 0.2s ease", cursor: "pointer", borderLeft: "3px solid transparent" }} onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.06)"; e.currentTarget.style.borderLeftColor = colors.amber; }} onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderLeftColor = "transparent"; }}>
+                <img src={c.img} alt={c.name} loading="lazy" style={{ width: "100%", height: 160, objectFit: "cover" }} />
                 <div style={{ padding: "20px 24px 24px" }}>
                   <span style={{ fontSize: 24 }}>{c.icon}</span>
                   <h3 style={{ fontSize: 17, fontWeight: 600, color: colors.text, margin: "8px 0 6px" }}>{c.name}</h3>
@@ -310,7 +295,7 @@ const ServiceCategories = ({ mobile }) => {
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 14, color: colors.textSecondary, marginTop: 24 }}>More categories are in development. <span style={{ color: colors.amber, fontWeight: 500, cursor: "pointer" }} onClick={() => scrollTo("customer-survey")}>Register your interest \u2192</span></p>
+          <p style={{ fontSize: 14, color: colors.textSecondary, marginTop: 24 }}>More categories are in development. <span style={{ color: colors.amber, fontWeight: 500, cursor: "pointer" }} onClick={() => scrollTo("customer-survey")}>Register your interest {"\u2192"}</span></p>
         </div>
       </FadeIn>
     </section>
@@ -330,7 +315,7 @@ const TierSection = ({ mobile }) => {
           <Label light>Choose Your Service Level</Label>
           <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.white, margin: "0 0 12px" }}>The Same High Standards. Different Levels of Speed and Experience.</h2>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,0.55)", marginBottom: 48 }}>Every Fix Plug provider is verified. Your tier choice reflects how fast you need it, and how experienced you want your provider to be.</p>
-          <div style={{ display: "flex", flexDirection: mobile ? "column" : "row", gap: 20, alignItems: mobile ? "stretch" : "stretch" }}>
+          <div style={{ display: "flex", flexDirection: mobile ? "column" : "row", gap: 20, alignItems: "stretch" }}>
             {tiers.map(t => (
               <div key={t.name} style={{ flex: 1, background: t.featured ? "rgba(200,133,58,0.08)" : "rgba(255,255,255,0.04)", border: t.featured ? `2px solid ${colors.amber}` : "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: 32, textAlign: "left", transform: !mobile && t.featured ? "scale(1.04)" : "none", transition: "all 0.2s ease" }}>
                 <h3 style={{ fontSize: 22, fontWeight: 700, color: colors.white, margin: "0 0 4px" }}>{t.name}</h3>
@@ -338,12 +323,12 @@ const TierSection = ({ mobile }) => {
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.6, marginBottom: 20 }}>{t.desc}</p>
                 {t.features.map(f => (
                   <div key={f} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                    <span style={{ color: colors.amber, fontSize: 10 }}>\u25CF</span>
+                    <span style={{ color: colors.amber, fontSize: 10 }}>{"\u25CF"}</span>
                     <span style={{ fontSize: 13, color: "rgba(255,255,255,0.75)" }}>{f}</span>
                   </div>
                 ))}
                 <div style={{ marginTop: 24 }}>
-                  <Btn variant="amber" onClick={() => scrollTo("customer-survey")}>Book {t.name} \u2192</Btn>
+                  <Btn variant="amber" onClick={() => scrollTo("customer-survey")}>Book {t.name} {"\u2192"}</Btn>
                 </div>
               </div>
             ))}
@@ -365,7 +350,7 @@ const CustomerSection = ({ mobile }) => (
           <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 24 }}>You should not have to chase a worker to finish a job. You should not have to guess what something will cost. Fix Plug gives you verified providers, confirmed pricing, and a clear path to resolution if anything goes wrong.</p>
           {["Access to screened, approved professionals", "Pricing confirmed before work begins", "A provider who knows what is expected", "A rating system that holds everyone accountable", "Support if something does not go as planned"].map(f => (
             <div key={f} style={{ display: "flex", gap: 10, marginBottom: 10, alignItems: "center" }}>
-              <span style={{ color: colors.amber, fontSize: 8 }}>\u25CF</span>
+              <span style={{ color: colors.amber, fontSize: 8 }}>{"\u25CF"}</span>
               <span style={{ fontSize: 14, color: colors.text }}>{f}</span>
             </div>
           ))}
@@ -374,7 +359,7 @@ const CustomerSection = ({ mobile }) => (
         </div>
         {!mobile && (
           <div style={{ flex: 1 }}>
-            <img src="https://images.pexels.com/photos/7114420/pexels-photo-7114420.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Happy Nigerian family relaxing at home" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 440, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
+            <img src="https://images.pexels.com/photos/7114420/pexels-photo-7114420.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Happy Nigerian family relaxing at home" loading="lazy" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 440, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
           </div>
         )}
       </div>
@@ -392,7 +377,6 @@ const CustomerSurvey = ({ mobile }) => {
   const handleSubmit = () => {
     if (!form.name || !form.phone || !form.location || form.services.length === 0) return;
     setSubmitting(true);
-    // Submit to Formspree or your backend - replace YOUR_FORM_ID with actual endpoint
     fetch("https://formspree.io/f/xpwdejrq", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -406,7 +390,7 @@ const CustomerSurvey = ({ mobile }) => {
     return (
       <section id="customer-survey" style={{ background: colors.white, borderTop: `1px solid ${colors.border}`, padding: mobile ? "60px 20px" : "80px 60px" }}>
         <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
-          <span style={{ fontSize: 48, display: "block", marginBottom: 16 }}>\u2713</span>
+          <span style={{ fontSize: 48, display: "block", marginBottom: 16 }}>{"\u2713"}</span>
           <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.text, margin: "0 0 12px", fontFamily: "'Fraunces', serif" }}>Thank You!</h2>
           <p style={{ fontSize: 16, color: colors.textSecondary, lineHeight: 1.7 }}>Your response has been recorded. We will be in touch as Fix Plug rolls out in your area. You are now on our early access list.</p>
           <div style={{ marginTop: 24 }}><Btn variant="amber" onClick={() => { setSubmitted(false); setForm({ name: "", phone: "", email: "", location: "", services: [], findMethod: "", priorities: [], comments: "" }); }}>Submit Another Response</Btn></div>
@@ -424,7 +408,6 @@ const CustomerSurvey = ({ mobile }) => {
             <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.text, margin: "0 0 12px", fontFamily: "'Fraunces', serif" }}>Help Us Build What You Actually Need.</h2>
             <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.7 }}>Tell us about your experience finding skilled services. Your answers shape how Fix Plug launches in your area.</p>
           </div>
-
           <div style={{ background: colors.bg, borderRadius: 14, padding: mobile ? "28px 20px" : "36px 32px", border: `1px solid ${colors.border}` }}>
             <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1fr", gap: mobile ? 0 : 16 }}>
               <FormInput label="Full Name" placeholder="Your full name" value={form.name} onChange={v => update("name", v)} required />
@@ -432,28 +415,12 @@ const CustomerSurvey = ({ mobile }) => {
             </div>
             <FormInput label="Email Address" type="email" placeholder="your@email.com (optional)" value={form.email} onChange={v => update("email", v)} />
             <FormInput label="Your Location" type="select" placeholder="Select your city..." value={form.location} onChange={v => update("location", v)} required options={["Abuja", "Lagos", "Port Harcourt", "Enugu", "Kano", "Ibadan", "Kaduna", "Benin City", "Other"]} />
-
-            <CheckboxGroup
-              label="What services do you need most?"
-              options={["Electrician", "Plumber", "AC Technician", "Generator / Inverter", "Handyman / General Repairs", "Painter", "Carpenter", "Other"]}
-              selected={form.services}
-              onChange={v => update("services", v)}
-              required
-            />
-
+            <CheckboxGroup label="What services do you need most?" options={["Electrician", "Plumber", "AC Technician", "Generator / Inverter", "Handyman / General Repairs", "Painter", "Carpenter", "Other"]} selected={form.services} onChange={v => update("services", v)} required />
             <FormInput label="How do you currently find service providers?" type="select" placeholder="Select..." value={form.findMethod} onChange={v => update("findMethod", v)} options={["Word of mouth / friends", "Social media (WhatsApp, Instagram, etc.)", "Google search", "Estate / community recommendations", "I struggle to find anyone reliable", "Other"]} />
-
-            <CheckboxGroup
-              label="What matters most to you when hiring a service provider?"
-              options={["Trust & Verification", "Fair & Transparent Pricing", "Speed / Availability", "Quality of Work", "Professionalism", "Warranty / Guarantee", "Easy Booking Process"]}
-              selected={form.priorities}
-              onChange={v => update("priorities", v)}
-            />
-
+            <CheckboxGroup label="What matters most to you when hiring a service provider?" options={["Trust & Verification", "Fair & Transparent Pricing", "Speed / Availability", "Quality of Work", "Professionalism", "Warranty / Guarantee", "Easy Booking Process"]} selected={form.priorities} onChange={v => update("priorities", v)} />
             <FormInput label="Anything else you'd like us to know?" type="textarea" placeholder="Any specific frustrations, needs, or suggestions..." value={form.comments} onChange={v => update("comments", v)} />
-
             <div style={{ marginTop: 8 }}>
-              <Btn variant="amber" large style={{ width: "100%", textAlign: "center", display: "block", opacity: submitting ? 0.7 : 1 }} onClick={handleSubmit}>
+              <Btn variant="amber" large style={{ width: "100%", textAlign: "center", display: "block", opacity: submitting ? 0.7 : 1, pointerEvents: submitting ? "none" : "auto" }} onClick={handleSubmit}>
                 {submitting ? "Submitting..." : "Submit & Join Early Access"}
               </Btn>
               <p style={{ fontSize: 12, color: colors.textSecondary, textAlign: "center", marginTop: 10 }}>Your information is kept private. We only use it to improve Fix Plug and notify you when we launch in your area.</p>
@@ -466,33 +433,33 @@ const CustomerSurvey = ({ mobile }) => {
 };
 
 const ProviderSection = ({ mobile }) => (
-  <section style={{ background: colors.forest, padding: mobile ? "60px 20px" : "100px 60px" }}>
+  <section id="for-providers" style={{ background: colors.forest, padding: mobile ? "60px 20px" : "100px 60px" }}>
     <FadeIn>
       <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", gap: mobile ? 32 : 60, flexDirection: mobile ? "column" : "row-reverse", alignItems: "center" }}>
         <div style={{ flex: 1 }}>
           <Label light>For Providers</Label>
           <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.white, margin: "0 0 16px", lineHeight: 1.2 }}>A Better Way to Work. A Better Class of Customer.</h2>
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.7, marginBottom: 24 }}>If you are skilled, professional, and tired of relying only on word of mouth \u2014 Fix Plug is built for you. Join early, meet our standards, and access a pipeline of customers who value quality work.</p>
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.7, marginBottom: 24 }}>If you are skilled, professional, and tired of relying only on word of mouth — Fix Plug is built for you. Join early, meet our standards, and access a pipeline of customers who value quality work.</p>
           <p style={{ fontSize: 13, color: colors.amber, fontWeight: 600, marginBottom: 12, letterSpacing: "0.04em" }}>WHAT YOU GET</p>
           {["Visibility to customers who value professional service", "Clear job briefs before you arrive", "Transparent earnings with no hidden surprises", "A growing reputation on a platform that means something", "A path to Premier tier for top performers"].map(f => (
             <div key={f} style={{ display: "flex", gap: 10, marginBottom: 10, alignItems: "center" }}>
-              <span style={{ color: colors.amber, fontSize: 8 }}>\u25CF</span>
+              <span style={{ color: colors.amber, fontSize: 8 }}>{"\u25CF"}</span>
               <span style={{ fontSize: 14, color: "rgba(255,255,255,0.8)" }}>{f}</span>
             </div>
           ))}
           <p style={{ fontSize: 13, color: colors.amber, fontWeight: 600, margin: "24px 0 12px", letterSpacing: "0.04em" }}>WHAT WE ASK OF YOU</p>
           {["Pass our verification intake", "Commit to our conduct and quality standards", "Show up professionally and complete jobs as agreed", "Communicate clearly with customers throughout"].map(f => (
             <div key={f} style={{ display: "flex", gap: 10, marginBottom: 10, alignItems: "center" }}>
-              <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 8 }}>\u25CF</span>
+              <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 8 }}>{"\u25CF"}</span>
               <span style={{ fontSize: 14, color: "rgba(255,255,255,0.65)" }}>{f}</span>
             </div>
           ))}
           <div style={{ marginTop: 28 }}><Btn variant="amber" large onClick={() => scrollTo("provider-survey")}>Apply to Join the Network</Btn></div>
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 12 }}>Currently recruiting providers in Abuja. Applications from other cities welcome \u2014 expansion is coming.</p>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 12 }}>Currently recruiting providers in Abuja. Applications from other cities welcome — expansion is coming.</p>
         </div>
         {!mobile && (
           <div style={{ flex: 1 }}>
-            <img src="https://images.pexels.com/photos/8487400/pexels-photo-8487400.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional service provider ready to work" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 480, boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }} />
+            <img src="https://images.pexels.com/photos/8487400/pexels-photo-8487400.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional service provider ready to work" loading="lazy" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 480, boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }} />
           </div>
         )}
       </div>
@@ -523,7 +490,7 @@ const ProviderSurvey = ({ mobile }) => {
     return (
       <section id="provider-survey" style={{ background: colors.forest, padding: mobile ? "60px 20px" : "80px 60px" }}>
         <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
-          <span style={{ fontSize: 48, display: "block", marginBottom: 16, color: colors.amber }}>\u2713</span>
+          <span style={{ fontSize: 48, display: "block", marginBottom: 16, color: colors.amber }}>{"\u2713"}</span>
           <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.white, margin: "0 0 12px", fontFamily: "'Fraunces', serif" }}>Application Received!</h2>
           <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", lineHeight: 1.7 }}>Thank you for your interest in joining the Fix Plug provider network. We will review your information and reach out as we onboard providers in your area.</p>
           <div style={{ marginTop: 24 }}><Btn variant="amber" onClick={() => { setSubmitted(false); setForm({ name: "", phone: "", email: "", location: "", trade: "", experience: "", certified: "", findCustomers: "", whyJoin: [], comments: "" }); }}>Submit Another Application</Btn></div>
@@ -541,7 +508,6 @@ const ProviderSurvey = ({ mobile }) => {
             <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.white, margin: "0 0 12px", fontFamily: "'Fraunces', serif" }}>Join the Fix Plug Provider Network.</h2>
             <p style={{ fontSize: 15, color: "rgba(255,255,255,0.55)", lineHeight: 1.7 }}>We are building a network of Nigeria's most professional service providers. Tell us about yourself and your trade.</p>
           </div>
-
           <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 14, padding: mobile ? "28px 20px" : "36px 32px", border: "1px solid rgba(255,255,255,0.1)" }}>
             <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1fr", gap: mobile ? 0 : 16 }}>
               <FormInput label="Full Name" placeholder="Your full name" value={form.name} onChange={v => update("name", v)} required />
@@ -549,26 +515,14 @@ const ProviderSurvey = ({ mobile }) => {
             </div>
             <FormInput label="Email Address" type="email" placeholder="your@email.com (optional)" value={form.email} onChange={v => update("email", v)} />
             <FormInput label="Your Location" type="select" placeholder="Select your city..." value={form.location} onChange={v => update("location", v)} required options={["Abuja", "Lagos", "Port Harcourt", "Enugu", "Kano", "Ibadan", "Kaduna", "Benin City", "Other"]} />
-
             <FormInput label="Primary Trade / Skill" type="select" placeholder="Select your trade..." value={form.trade} onChange={v => update("trade", v)} required options={["Electrician", "Plumber", "AC Technician", "Generator / Inverter Technician", "Handyman / General Repairs", "Painter", "Carpenter", "Tiler", "Other"]} />
-
             <FormInput label="Years of Experience" type="select" placeholder="Select..." value={form.experience} onChange={v => update("experience", v)} options={["Less than 1 year", "1 - 3 years", "3 - 5 years", "5 - 10 years", "10+ years"]} />
-
             <FormInput label="Do you have any trade certifications?" type="select" placeholder="Select..." value={form.certified} onChange={v => update("certified", v)} options={["Yes, formally certified", "I have some training certificates", "No formal certification, but experienced", "Currently in training"]} />
-
             <FormInput label="How do you currently find customers?" type="select" placeholder="Select..." value={form.findCustomers} onChange={v => update("findCustomers", v)} options={["Word of mouth only", "Social media (WhatsApp, Instagram, etc.)", "Through a company or contractor", "Walk-in / roadside presence", "I struggle to find steady work", "Other"]} />
-
-            <CheckboxGroup
-              label="What would make you join a platform like Fix Plug?"
-              options={["Steady flow of customers", "Better pay / transparent earnings", "Professional recognition", "Training & skill development", "Tools or equipment support", "Insurance / safety coverage"]}
-              selected={form.whyJoin}
-              onChange={v => update("whyJoin", v)}
-            />
-
+            <CheckboxGroup label="What would make you join a platform like Fix Plug?" options={["Steady flow of customers", "Better pay / transparent earnings", "Professional recognition", "Training & skill development", "Tools or equipment support", "Insurance / safety coverage"]} selected={form.whyJoin} onChange={v => update("whyJoin", v)} />
             <FormInput label="Anything else you'd like us to know?" type="textarea" placeholder="Tell us about your experience, tools you have, areas you cover..." value={form.comments} onChange={v => update("comments", v)} />
-
             <div style={{ marginTop: 8 }}>
-              <Btn variant="amber" large style={{ width: "100%", textAlign: "center", display: "block", opacity: submitting ? 0.7 : 1 }} onClick={handleSubmit}>
+              <Btn variant="amber" large style={{ width: "100%", textAlign: "center", display: "block", opacity: submitting ? 0.7 : 1, pointerEvents: submitting ? "none" : "auto" }} onClick={handleSubmit}>
                 {submitting ? "Submitting..." : "Apply to Join Fix Plug"}
               </Btn>
               <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textAlign: "center", marginTop: 10 }}>Your information is kept private. We only use it to evaluate your fit for the Fix Plug network and notify you about next steps.</p>
@@ -591,22 +545,22 @@ const AbujaSection = ({ mobile }) => {
   return (
     <section style={{ position: "relative", padding: mobile ? "60px 20px" : "100px 60px", textAlign: "center", overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-        <img src="https://images.pexels.com/photos/31187374/pexels-photo-31187374.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Aerial view of Abuja" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <img src="https://images.pexels.com/photos/31187374/pexels-photo-31187374.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Aerial view of Abuja" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(249,247,244,0.92), rgba(249,247,244,0.96))" }} />
       </div>
       <FadeIn>
         <div style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <Label>Where We Are Building</Label>
           <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, margin: "0 0 16px" }}>Starting in Abuja. Open to Nigeria.</h2>
-          <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 32 }}>Fix Plug is launching operations in Abuja \u2014 where demand for trusted skilled services is high and the gap in quality is clear. We expand based on demand. Your registration tells us where to build next.</p>
+          <p style={{ fontSize: 15, color: colors.textSecondary, lineHeight: 1.7, marginBottom: 32 }}>Fix Plug is launching operations in Abuja — where demand for trusted skilled services is high and the gap in quality is clear. We expand based on demand. Your registration tells us where to build next.</p>
           <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 32 }}>
             {cities.map(c => (
               <span key={c.name} style={{ padding: "8px 18px", borderRadius: 20, fontSize: 13, fontWeight: 500, background: c.active ? colors.amber : colors.tierHighlight, color: c.active ? colors.white : colors.textSecondary, border: c.active ? "none" : `1px solid ${colors.border}` }}>
-                {c.name}{c.active ? " \u2014 Active" : ""}
+                {c.name}{c.active ? " — Active" : ""}
               </span>
             ))}
           </div>
-          <span style={{ color: colors.amber, fontWeight: 500, fontSize: 14, cursor: "pointer" }} onClick={() => scrollTo("customer-survey")}>Register Your City's Interest \u2192</span>
+          <span style={{ color: colors.amber, fontWeight: 500, fontSize: 14, cursor: "pointer" }} onClick={() => scrollTo("customer-survey")}>Register Your City's Interest {"\u2192"}</span>
         </div>
       </FadeIn>
     </section>
@@ -645,8 +599,8 @@ const ClosingCTA = ({ mobile }) => (
   <section style={{ background: colors.dark, padding: mobile ? "60px 20px" : "100px 60px", textAlign: "center" }}>
     <FadeIn>
       <div style={{ maxWidth: 640, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "'Fraunces', 'Playfair Display', serif", fontSize: mobile ? 32 : 44, fontWeight: 700, color: colors.white, margin: "0 0 16px", lineHeight: 1.15 }}>Skilled Services in Nigeria \u2014 Done Right.</h2>
-        <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", marginBottom: 36 }}>Whether you need a trusted professional or you are ready to be one \u2014 Fix Plug is where quality skilled services begin.</p>
+        <h2 style={{ fontFamily: "'Fraunces', 'Playfair Display', serif", fontSize: mobile ? 32 : 44, fontWeight: 700, color: colors.white, margin: "0 0 16px", lineHeight: 1.15 }}>Skilled Services in Nigeria — Done Right.</h2>
+        <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", marginBottom: 36 }}>Whether you need a trusted professional or you are ready to be one — Fix Plug is where quality skilled services begin.</p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           <Btn variant="amber" large onClick={() => scrollTo("customer-survey")}>Get Early Access as a Customer</Btn>
           <Btn variant="white" outline large style={{ borderColor: "rgba(255,255,255,0.3)", color: colors.white }} onClick={() => scrollTo("provider-survey")}>Apply to Join as a Provider</Btn>
@@ -665,13 +619,13 @@ const Footer = ({ mobile }) => (
         <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", marginTop: 4 }}>Trusted Skilled Services. Built for Nigeria.</p>
       </div>
       <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-        {[{ l: "How It Works" }, { l: "Services" }, { l: "For Providers" }, { l: "Customer Survey", id: "customer-survey" }, { l: "Provider Survey", id: "provider-survey" }, { l: "Contact" }].map(item => (
+        {[{ l: "How It Works", id: "how-it-works" }, { l: "Services", id: "services" }, { l: "For Providers", id: "for-providers" }, { l: "Customer Survey", id: "customer-survey" }, { l: "Provider Survey", id: "provider-survey" }, { l: "Contact" }].map(item => (
           <span key={item.l} style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", cursor: "pointer" }} onClick={item.id ? () => scrollTo(item.id) : undefined}>{item.l}</span>
         ))}
       </div>
     </div>
     <div style={{ maxWidth: 900, margin: "24px auto 0", borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
-      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0 }}>\u00A9 2025 Fix Plug. A HorizonBond Venture. All rights reserved.</p>
+      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0 }}>{"\u00A9"} 2025 Fix Plug. A HorizonBond Venture. All rights reserved.</p>
       <p style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", marginTop: 8 }}>Your information is collected solely to match you with services or opportunities relevant to your sign-up. We do not share your data with third parties without your consent.</p>
     </div>
   </footer>
@@ -684,29 +638,37 @@ export default function FixPlugLanding() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <div style={{ fontFamily: "'Inter', 'DM Sans', -apple-system, sans-serif", color: colors.text, margin: 0, padding: 0 }}>
-      <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@200;400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      <AnnouncementBar />
-      <Nav mobile={mobile} scrolled={scrolled} />
-      <Hero mobile={mobile} />
-      <TrustStrip mobile={mobile} />
-      <ProblemSection mobile={mobile} />
-      <HowItWorks mobile={mobile} />
-      <ServiceCategories mobile={mobile} />
-      <TierSection mobile={mobile} />
-      <CustomerSection mobile={mobile} />
-      <CustomerSurvey mobile={mobile} />
-      <ProviderSection mobile={mobile} />
-      <ProviderSurvey mobile={mobile} />
-      <AbujaSection mobile={mobile} />
-      <TrustSection mobile={mobile} />
-      <ClosingCTA mobile={mobile} />
-      <Footer mobile={mobile} />
-    </div>
-  );
-}
+  // Inject SEO meta tags
+  useEffect(() => {
+    document.title = "Fix Plug — Skilled Services You Can Actually Trust";
+    const setMeta = (name, content, prop) => {
+      let tag = document.querySelector(`meta[${prop || "name"}="${name}"]`);
+      if (!tag) { tag = document.createElement("meta"); tag.setAttribute(prop || "name", name); document.head.appendChild(tag); }
+      tag.setAttribute("content", content);
+    };
+    setMeta("description", "Fix Plug connects Nigerian homes and businesses to verified, professional service providers. Starting in Abuja, built for the whole country. Book trusted electricians, plumbers, AC technicians, and more.");
+    setMeta("keywords", "Fix Plug, skilled services Nigeria, electrician Abuja, plumber Abuja, AC repair Nigeria, generator repair, verified service providers, home services Nigeria, professional handyman");
+    setMeta("author", "Fix Plug — A HorizonBond Venture");
+    setMeta("og:title", "Fix Plug — Skilled Services You Can Actually Trust", "property");
+    setMeta("og:description", "Verified, professional service providers for Nigerian homes and businesses. Starting in Abuja.", "property");
+    setMeta("og:type", "website", "property");��]Y]J��Ν\���΋�ٚ^Y˘\����\�H�N�]Y]J��Κ[XY�H��΋��[XY�\˜^[˘��K�����
+
+�L̋�^[�\��N
+
+�L̋��Y��]]�X��\�\�ɘ��][�\ܙ؉��LL�����\�H�N�]Y]J��]\���\����[[X\�W�\��W�[XY�H�N�]Y]J��]\��]H���^Y�8�%��[Y�\��X�\�[�H�[�X�X[H�\��N�]Y]J��]\��\�ܚ\[ۈ���\�Y�YY�ٙ\��[ۘ[�\��X�H�ݚY\���܈�Y�\�X[��Y\�[��\�[�\��\ˈ�\�[��[�X�Z�K��N�]Y]J��]\��[XY�H��΋��[XY�\˜^[˘��K�����
+
+�L̋�^[�\��N
+
+�L̋��Y��]]�X��\�\�ɘ��][�\ܙ؉��LL��N�]Y]J�[YKX��܈����
+L�H�N��[��\�H�Y]�ܝ\��]�܈[ؚ[B�Y�
+Y��[Y[��]Y\�T�[X�܊	�Y]Vۘ[YOH��Y]�ܝ�I�JH�ۜ��H��[Y[��ܙX]Q[[Y[�
+�Y]H�N���]]�X�]J��[YH���Y]�ܝ�N���]]�X�]J��۝[����YY]�X�K]�Y[�]X[\��[OLK�X^[][K\��[OMK��N��[Y[��XY�\[��[
+�
+NB�K�JN��]\��
+�\��ܐ��[�\�O��]��[O^���۝�[Z[N���[�\��	�H�[���X\K\�\�[K�[��XX��\�[Q�۝	��Y��HRI��؛���[��\�\�Y����܎���ܜ˝^X\��[��Y[�Έݙ\������Y[���X��]�۝�[��[�Έ�[�X[X\�Y�[ޓ���۝�[��[�Έ�ܘ^\��[H�_O��[���Y�H�΋�ٛ۝˙����X\\˘��K���̏٘[Z[OQ��][��\Ν������	��[Z[OR[�\����
+�L͌��	�\�^O\��\��[H��[\�Y]�ς�[���[��[Y[��\�ς��]�[ؚ[O^�[ؚ[_H�ܛ�Y^��ܛ�YHς�\��[ؚ[O^�[ؚ[_Hς��\���\[ؚ[O^�[ؚ[_Hς��؛[T�X�[ۈ[ؚ[O^�[ؚ[_Hς���]�ܚ��[ؚ[O^�[ؚ[_Hς��\��X�P�]Y�ܚY\�[ؚ[O^�[ؚ[_Hς�Y\��X�[ۈ[ؚ[O^�[ؚ[_Hς��\��Y\��X�[ۈ[ؚ[O^�[ؚ[_Hς��\��Y\��\��^H[ؚ[O^�[ؚ[_Hς��ݚY\��X�[ۈ[ؚ[O^�[ؚ[_Hς��ݚY\��\��^H[ؚ[O^�[ؚ[_Hς�X�Z�T�X�[ۈ[ؚ[O^�[ؚ[_Hς��\��X�[ۈ[ؚ[O^�[ؚ[_Hς����[���H[ؚ[O^�[ؚ[_Hς����\�[ؚ[O^�[ؚ[_Hς��]����\��ܐ��[�\�O��
+NB
