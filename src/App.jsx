@@ -215,7 +215,7 @@ const Hero = ({ mobile }) => (
       </div>
       <FadeIn style={{ flex: 1, display: mobile ? "none" : "block" }}>
         <div style={{ position: "relative" }}>
-          <img src="https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Professional plumber installing pipes" style={{ width: "100%", borderRadius: 16, objectFit: "cover", height: 520, boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }} />
+          <img src="https://images.pexels.com/photos/8486932/pexels-photo-8486932.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Professional tradeswoman in safety gear" style={{ width: "100%", borderRadius: 16, objectFit: "cover", height: 520, boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }} />
           <div style={{ position: "absolute", bottom: -16, left: -16, background: colors.amber, color: colors.white, padding: "14px 20px", borderRadius: 10, fontSize: 13, fontWeight: 600, boxShadow: "0 4px 16px rgba(200,133,58,0.3)" }}>
             <span style={{ fontSize: 20, marginRight: 8 }}>\u2713</span>Verified & Professional
           </div>
@@ -247,7 +247,7 @@ const ProblemSection = ({ mobile }) => (
         </div>
         {!mobile && (
           <div style={{ flex: 1 }}>
-            <img src="https://images.pexels.com/photos/7484798/pexels-photo-7484798.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional tools in workshop" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 380, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
+            <img src="https://images.pexels.com/photos/7937712/pexels-photo-7937712.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional tradesman at work" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 380, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
           </div>
         )}
       </div>
@@ -285,9 +285,9 @@ const HowItWorks = ({ mobile }) => {
 const ServiceCategories = ({ mobile }) => {
   const cats = [
     { icon: "\u26A1", name: "Electrical", desc: "Installations, fault diagnosis, wiring, safety checks, and more.", img: "https://images.pexels.com/photos/9679179/pexels-photo-9679179.jpeg?auto=compress&cs=tinysrgb&w=400" },
-    { icon: "\uD83D\uDD27", name: "Plumbing", desc: "Leaks, pipe installations, drainage repairs, water system work.", img: "https://images.unsplash.com/photo-1676210133055-eab6ef033ce3?w=400&q=80&fit=crop" },
-    { icon: "\u2744\uFE0F", name: "AC Repair & Installation", desc: "Servicing, fault-finding, new installations, and routine maintenance.", img: "https://images.unsplash.com/photo-1550998251-1e18917c975c?w=400&q=80&fit=crop" },
-    { icon: "\u2699\uFE0F", name: "Generator & Inverter Support", desc: "Repairs, maintenance, installation, and diagnostic support.", img: "https://images.pexels.com/photos/175039/pexels-photo-175039.jpeg?auto=compress&cs=tinysrgb&w=400" },
+    { icon: "\uD83D\uDD27", name: "Plumbing", desc: "Leaks, pipe installations, drainage repairs, water system work.", img: "https://images.pexels.com/photos/8961699/pexels-photo-8961699.jpeg?auto=compress&cs=tinysrgb&w=400" },
+    { icon: "\u2744\uFE0F", name: "AC Repair & Installation", desc: "Servicing, fault-finding, new installations, and routine maintenance.", img: "https://images.pexels.com/photos/442160/pexels-photo-442160.jpeg?auto=compress&cs=tinysrgb&w=400" },
+    { icon: "\u2699\uFE0F", name: "Generator & Inverter Support", desc: "Repairs, maintenance, installation, and diagnostic support.", img: "https://images.pexels.com/photos/9242173/pexels-photo-9242173.jpeg?auto=compress&cs=tinysrgb&w=400" },
   ];
   return (
     <section style={{ background: colors.bg, padding: mobile ? "60px 20px" : "100px 60px" }}>
@@ -374,7 +374,7 @@ const CustomerSection = ({ mobile }) => (
         </div>
         {!mobile && (
           <div style={{ flex: 1 }}>
-            <img src="https://images.pexels.com/photos/7578967/pexels-photo-7578967.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Happy homeowners" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 440, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
+            <img src="https://images.pexels.com/photos/7114420/pexels-photo-7114420.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Happy Nigerian family relaxing at home" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 440, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }} />
           </div>
         )}
       </div>
@@ -492,7 +492,7 @@ const ProviderSection = ({ mobile }) => (
         </div>
         {!mobile && (
           <div style={{ flex: 1 }}>
-            <img src="https://images.unsplash.com/photo-1635842183772-52b2862a162b?w=600&q=80&fit=crop" alt="Professional service provider" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 480, boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }} />
+            <img src="https://images.pexels.com/photos/8487400/pexels-photo-8487400.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Professional service provider ready to work" style={{ width: "100%", borderRadius: 14, objectFit: "cover", height: 480, boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }} />
           </div>
         )}
       </div>
