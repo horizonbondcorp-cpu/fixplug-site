@@ -174,7 +174,7 @@ const Nav = ({ mobile, scrolled }) => {
           <span onClick={() => setOpen(!open)} style={{ fontSize: 24, cursor: "pointer", color: colors.text }}>{open ? "✕" : "☰"}</span>
           {open && (
             <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: colors.bg, padding: "24px 20px", boxShadow: "0 8px 24px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", gap: 16 }}>
-              {["How It Works", "Services", "For Providers"].map(l => <a key={l} style={{ color: colors.text, textDecoration: "none", fontSize: 15, fontWeight: 500, cursor: "pointer" }}>{l}</a>)}
+              {[{label:"How It Works",id:"how-it-works"},{label:"Services",id:"services"},{label:"For Providers",id:"for-providers"}].map(l => <a key={l.label} onClick={() => {scrollTo(l.id);setOpen(false);}} style={{ color: colors.text, textDecoration: "none", fontSize: 15, fontWeight: 500, cursor: "pointer" }}>{l.label}</a>)}
               <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
                 <Btn variant="amber" onClick={() => { setOpen(false); scrollTo("customer-survey"); }}>Book a Service</Btn>
                 <Btn variant="amber" outline onClick={() => { setOpen(false); scrollTo("provider-survey"); }}>Join as Provider</Btn>
@@ -184,7 +184,7 @@ const Nav = ({ mobile, scrolled }) => {
         </>
       ) : (
         <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-          {["How It Works", "Services", "For Providers", "Get Access"].map(l => <a key={l} style={{ color: colors.textSecondary, textDecoration: "none", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>{l}</a>)}
+          {[{label:"How It Works",id:"how-it-works"},{label:"Services",id:"services"},{label:"For Providers",id:"for-providers"},{label:"Get Access",id:"customer-survey"}].map(l => <a key={l.label} onClick={() => scrollTo(l.id)} style={{ color: colors.textSecondary, textDecoration: "none", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>{l.label}</a>)}
           <div style={{ display: "flex", gap: 10, marginLeft: 16 }}>
             <Btn variant="amber" onClick={() => scrollTo("customer-survey")}>Book a Service</Btn>
             <Btn variant="amber" outline onClick={() => scrollTo("provider-survey")}>Join as Provider</Btn>
@@ -264,7 +264,7 @@ const HowItWorks = ({ mobile }) => {
   return (
     <section style={{ background: colors.white, borderTop: `1px solid ${colors.border}`, borderBottom: `1px solid ${colors.border}`, padding: mobile ? "60px 20px" : "100px 60px" }}>
       <FadeIn>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+        <div id="how-it-works" style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <Label>How Fix Plug Works</Label>
           <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, margin: "0 0 48px" }}>Simple for You. Professional from End to End.</h2>
           <div style={{ display: "flex", flexDirection: mobile ? "column" : "row", gap: mobile ? 32 : 48 }}>
@@ -292,7 +292,7 @@ const ServiceCategories = ({ mobile }) => {
   return (
     <section style={{ background: colors.bg, padding: mobile ? "60px 20px" : "100px 60px" }}>
       <FadeIn>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+        <div id="services" style={{ maxWidth: 900, margin: "0 auto" }}>
           <Label>What We Cover</Label>
           <h2 style={{ fontSize: mobile ? 28 : 38, fontWeight: 700, color: colors.text, margin: "0 0 12px" }}>Professional Help Across the Services That Matter Most.</h2>
           <p style={{ fontSize: 15, color: colors.textSecondary, marginBottom: 36 }}>Fix Plug launches with four high-demand categories — with more on the way.</p>
@@ -522,7 +522,7 @@ const ProviderSurvey = ({ mobile }) => {
   if (submitted) {
     return (
       <section id="provider-survey" style={{ background: colors.forest, padding: mobile ? "60px 20px" : "80px 60px" }}>
-        <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
+        <div id="for-providers" style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
           <span style={{ fontSize: 48, display: "block", marginBottom: 16, color: colors.amber }}>✓</span>
           <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.white, margin: "0 0 12px", fontFamily: "'Fraunces', serif" }}>Application Received!</h2>
           <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", lineHeight: 1.7 }}>Thank you for your interest in joining the Fix Plug provider network. We will review your information and reach out as we onboard providers in your area.</p>
@@ -665,13 +665,13 @@ const Footer = ({ mobile }) => (
         <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", marginTop: 4 }}>Trusted Skilled Services. Built for Nigeria.</p>
       </div>
       <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-        {[{ l: "How It Works" }, { l: "Services" }, { l: "For Providers" }, { l: "Customer Survey", id: "customer-survey" }, { l: "Provider Survey", id: "provider-survey" }, { l: "Contact" }].map(item => (
-          <span key={item.l} style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", cursor: "pointer" }} onClick={item.id ? () => scrollTo(item.id) : undefined}>{item.l}</span>
+        {[{ l: "How It Works" }, { l: "Services" }, { l: "For Providers" }, { l: "Customer Survey", id: "customer-survey" }, { l: "Provider Survey", id: "provider-survey" }, { l: "HorizonBond", href: "https://horizonbond.org" }].map(item => (
+          item.href ? <a key={item.l} href={item.href} target="_blank" rel="noopener noreferrer" style={{color:"rgba(255,255,255,0.5)",textDecoration:"none",fontSize:13,cursor:"pointer"}}>{item.l}</a> : <span key={item.l} style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", cursor: "pointer" }} onClick={item.id ? () => scrollTo(item.id) : undefined}>{item.l}</span>
         ))}
       </div>
     </div>
     <div style={{ maxWidth: 900, margin: "24px auto 0", borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
-      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0 }}>© 2026 Fix Plug. A HorizonBond Venture. All rights reserved.</p>
+      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0 }}>© 2026 Fix Plug. <a href="https://horizonbond.org" target="_blank" rel="noopener noreferrer" style={{color:"rgba(255,255,255,0.5)",textDecoration:"none"}}>A HorizonBond Venture</a>. All rights reserved.</p>
       <p style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", marginTop: 8 }}>Your information is collected solely to match you with services or opportunities relevant to your sign-up. We do not share your data with third parties without your consent.</p>
     </div>
   </footer>
