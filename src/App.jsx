@@ -510,7 +510,7 @@ const ProviderSurvey = ({ mobile }) => {
   const handleSubmit = () => {
     if (!form.name || !form.phone || !form.location || !form.trade) return;
     setSubmitting(true);
-    fetch("https://formspree.io/f/xpwdejrq", {
+    fetch("https://formspree.io/f/xdapdogy", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form, type: "provider_survey", whyJoin: form.whyJoin.join(", "), _subject: "Fix Plug - New Provider Application" }),
