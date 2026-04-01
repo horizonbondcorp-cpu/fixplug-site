@@ -655,20 +655,44 @@ export default function FixPlugLanding() {
     setMeta("author", "Fix Plug — A <a href="https://horizonbond.org" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.35)", textDecoration: "underline" }}>HorizonBond</a> Venture");
     setMeta("og:title", "Fix Plug — Skilled Services You Can Actually Trust", "property");
     setMeta("og:description", "Verified, professional service providers for Nigerian homes and businesses. Starting in Abuja.", "property");
-    setMeta("og:type", "website", "property");��]Y]J��Ν\���΋�ٚ^Y˘\����\�H�N�]Y]J��Κ[XY�H��΋��[XY�\˜^[˘��K�����
-
-�L̋�^[�\��N
-
-�L̋��Y��]]�X��\�\�ɘ��][�\ܙ؉��LL�����\�H�N�]Y]J��]\���\����[[X\�W�\��W�[XY�H�N�]Y]J��]\��]H���^Y�8�%��[Y�\��X�\�[�H�[�X�X[H�\��N�]Y]J��]\��\�ܚ\[ۈ���\�Y�YY�ٙ\��[ۘ[�\��X�H�ݚY\���܈�Y�\�X[��Y\�[��\�[�\��\ˈ�\�[��[�X�Z�K��N�]Y]J��]\��[XY�H��΋��[XY�\˜^[˘��K�����
-
-�L̋�^[�\��N
-
-�L̋��Y��]]�X��\�\�ɘ��][�\ܙ؉��LL��N�]Y]J�[YKX��܈����
-L�H�N��[��\�H�Y]�ܝ\��]�܈[ؚ[B�Y�
-Y��[Y[��]Y\�T�[X�܊	�Y]Vۘ[YOH��Y]�ܝ�I�JH�ۜ��H��[Y[��ܙX]Q[[Y[�
-�Y]H�N���]]�X�]J��[YH���Y]�ܝ�N���]]�X�]J��۝[����YY]�X�K]�Y[�]X[\��[OLK�X^[][K\��[OMK��N��[Y[��XY�\[��[
-�
-NB�K�JN��]\��
-�\��ܐ��[�\�O��]��[O^���۝�[Z[N���[�\��	�H�[���X\K\�\�[K�[��XX��\�[Q�۝	��Y��HRI��؛���[��\�\�Y����܎���ܜ˝^X\��[��Y[�Έݙ\������Y[���X��]�۝�[��[�Έ�[�X[X\�Y�[ޓ���۝�[��[�Έ�ܘ^\��[H�_O��[���Y�H�΋�ٛ۝˙����X\\˘��K���̏٘[Z[OQ��][��\Ν������	��[Z[OR[�\����
-�L͌��	�\�^O\��\��[H��[\�Y]�ς�[���[��[Y[��\�ς��]�[ؚ[O^�[ؚ[_H�ܛ�Y^��ܛ�YHς�\��[ؚ[O^�[ؚ[_Hς��\���\[ؚ[O^�[ؚ[_Hς��؛[T�X�[ۈ[ؚ[O^�[ؚ[_Hς���]�ܚ��[ؚ[O^�[ؚ[_Hς��\��X�P�]Y�ܚY\�[ؚ[O^�[ؚ[_Hς�Y\��X�[ۈ[ؚ[O^�[ؚ[_Hς��\��Y\��X�[ۈ[ؚ[O^�[ؚ[_Hς��\��Y\��\��^H[ؚ[O^�[ؚ[_Hς��ݚY\��X�[ۈ[ؚ[O^�[ؚ[_Hς��ݚY\��\��^H[ؚ[O^�[ؚ[_Hς�X�Z�T�X�[ۈ[ؚ[O^�[ؚ[_Hς��\��X�[ۈ[ؚ[O^�[ؚ[_Hς����[���H[ؚ[O^�[ؚ[_Hς����\�[ؚ[O^�[ؚ[_Hς��]����\��ܐ��[�\�O��
-NB
+    setMeta("og:type", "website", "property");
+    setMeta("og:url", "https://fixplug.app", "property");
+    setMeta("og:image", "https://images.pexels.com/photos/8486932/pexels-photo-8486932.jpeg?auto=compress&cs=tinysrgb&w=1200", "property");
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:title", "Fix Plug — Skilled Services You Can Actually Trust");
+    setMeta("twitter:description", "Verified, professional service providers for Nigerian homes and businesses. Starting in Abuja.");
+    setMeta("twitter:image", "https://images.pexels.com/photos/8486932/pexels-photo-8486932.jpeg?auto=compress&cs=tinysrgb&w=1200");
+    setMeta("theme-color", "#C8853A");
+    // Ensure viewport is set for mobile
+    if (!document.querySelector('meta[name="viewport"]')) {
+      const vp = document.createElement("meta");
+      vp.setAttribute("name", "viewport");
+      vp.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=5.0");
+      document.head.appendChild(vp);
+    }
+  }, []);
+
+  return (
+    <ErrorBoundary>
+      <div style={{ fontFamily: "'Inter', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", color: colors.text, margin: 0, padding: 0, overflowX: "hidden", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale" }}>
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@200;400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <AnnouncementBar />
+        <Nav mobile={mobile} scrolled={scrolled} />
+        <Hero mobile={mobile} />
+        <TrustStrip mobile={mobile} />
+        <ProblemSection mobile={mobile} />
+        <HowItWorks mobile={mobile} />
+        <ServiceCategories mobile={mobile} />
+        <TierSection mobile={mobile} />
+        <CustomerSection mobile={mobile} />
+        <CustomerSurvey mobile={mobile} />
+        <ProviderSection mobile={mobile} />
+        <ProviderSurvey mobile={mobile} />
+        <AbujaSection mobile={mobile} />
+        <TrustSection mobile={mobile} />
+        <ClosingCTA mobile={mobile} />
+        <Footer mobile={mobile} />
+      </div>
+    </ErrorBoundary>
+  );
+}
