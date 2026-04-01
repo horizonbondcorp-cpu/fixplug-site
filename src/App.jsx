@@ -174,7 +174,7 @@ const Nav = ({ mobile, scrolled }) => {
           <span onClick={() => setOpen(!open)} style={{ fontSize: 24, cursor: "pointer", color: colors.text }}>{open ? "✕" : "☰"}</span>
           {open && (
             <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: colors.bg, padding: "24px 20px", boxShadow: "0 8px 24px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", gap: 16 }}>
-              {[{label:"How It Works",id:"how-it-works"},{label:"Services",id:"services"},{label:"For Providers",id:"for-providers"}].map(l => <a key={l.label} onClick={() => {scrollTo(l.id);setOpen(false);}} style={{ color: colors.text, textDecoration: "none", fontSize: 15, fontWeight: 500, cursor: "pointer" }}>{l.label}</a>)}
+              {[{label:"How It Works",id:"how-it-works"},{label:"Services",id:"services"},{label:"For Providers",id:"provider-survey"}].map(l => <a key={l.label} onClick={() => {scrollTo(l.id);setOpen(false);}} style={{ color: colors.text, textDecoration: "none", fontSize: 15, fontWeight: 500, cursor: "pointer" }}>{l.label}</a>)}
               <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
                 <Btn variant="amber" onClick={() => { setOpen(false); scrollTo("customer-survey"); }}>Book a Service</Btn>
                 <Btn variant="amber" outline onClick={() => { setOpen(false); scrollTo("provider-survey"); }}>Join as Provider</Btn>
@@ -184,7 +184,7 @@ const Nav = ({ mobile, scrolled }) => {
         </>
       ) : (
         <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-          {[{label:"How It Works",id:"how-it-works"},{label:"Services",id:"services"},{label:"For Providers",id:"for-providers"},{label:"Get Access",id:"customer-survey"}].map(l => <a key={l.label} onClick={() => scrollTo(l.id)} style={{ color: colors.textSecondary, textDecoration: "none", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>{l.label}</a>)}
+          {[{label:"How It Works",id:"how-it-works"},{label:"Services",id:"services"},{label:"For Providers",id:"provider-survey"},{label:"Get Access",id:"customer-survey"}].map(l => <a key={l.label} onClick={() => scrollTo(l.id)} style={{ color: colors.textSecondary, textDecoration: "none", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>{l.label}</a>)}
           <div style={{ display: "flex", gap: 10, marginLeft: 16 }}>
             <Btn variant="amber" onClick={() => scrollTo("customer-survey")}>Book a Service</Btn>
             <Btn variant="amber" outline onClick={() => scrollTo("provider-survey")}>Join as Provider</Btn>
@@ -522,7 +522,7 @@ const ProviderSurvey = ({ mobile }) => {
   if (submitted) {
     return (
       <section id="provider-survey" style={{ background: colors.forest, padding: mobile ? "60px 20px" : "80px 60px" }}>
-        <div id="for-providers" style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
           <span style={{ fontSize: 48, display: "block", marginBottom: 16, color: colors.amber }}>✓</span>
           <h2 style={{ fontSize: mobile ? 28 : 36, fontWeight: 700, color: colors.white, margin: "0 0 12px", fontFamily: "'Fraunces', serif" }}>Application Received!</h2>
           <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", lineHeight: 1.7 }}>Thank you for your interest in joining the Fix Plug provider network. We will review your information and reach out as we onboard providers in your area.</p>
